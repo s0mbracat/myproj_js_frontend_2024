@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function getDateOnAdd() {
 
@@ -21,7 +22,7 @@ function getDateOnAdd() {
 
 }
 
-class JournalNoteAdd extends React.Component {
+class JournalNoteAddInner extends React.Component {
 	constructor(props) {
 		super(props);
 		
@@ -71,6 +72,7 @@ class JournalNoteAdd extends React.Component {
 			return res.json();
 		}).then((data) => {
 			this.props.onNoteAdd(data);
+			this.props.history('/');
 		});
 	}
 	
@@ -83,6 +85,12 @@ class JournalNoteAdd extends React.Component {
 			</form>
 		)
 	}
+}
+
+const JournalNoteAdd = (props) => {
+	return (
+		<JournalNoteAddInner {...props} history={useNavigate()} />
+	)
 }
 
 export default JournalNoteAdd;

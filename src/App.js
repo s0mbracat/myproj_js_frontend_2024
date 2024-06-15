@@ -1,7 +1,7 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-import JournalNote from './JournalNote';
-
+import JournalList from './JournalList';
 import JournalNoteAdd from './JournalNoteAdd';
 
 class App extends React.Component {
@@ -12,8 +12,10 @@ class App extends React.Component {
 			notes: []
 		}
 		
-		this.onNoteDelete = this.onNoteDelete.bind(this);
 		this.onNoteAdd = this.onNoteAdd.bind(this);
+		this.onNoteDelete = this.onNoteDelete.bind(this);
+
+		
 	}
 	
 	componentDidMount() {
@@ -26,6 +28,12 @@ class App extends React.Component {
 		});
 	}
 	
+	onNoteAdd(note) {
+		this.setState({
+			notes: [...this.state.notes, note]
+		});
+	}	
+	
 	onNoteDelete(_id) {
 		this.setState({
 			notes: this.state.notes.filter(function(note) {
@@ -34,25 +42,15 @@ class App extends React.Component {
 		});
 	}
 	
-	onNoteAdd(note) {
-		this.setState({
-			notes: [...this.state.notes, note]
-		});
-	}
-	
 	render() {
 			    return (
 				<div className="App">
-					<JournalNoteAdd onNoteAdd={this.onNoteAdd} />
-					<ul>
-					{
-						this.state.notes.map((note) => {
-							return (
-								<JournalNote note={note} onNoteDelete={this.onNoteDelete} key={note._id} />
-							)
-						})
-					}
-					</ul>
+					<Router>
+						<Routes>
+							<Route path="/" element={<JournalList notes={this.state.notes} onNoteDelete={this.onNoteDelete} />} />
+							<Route path="/add" element={<JournalNoteAdd onNoteAdd={this.onNoteAdd} />} />
+						</Routes>
+					</Router>
 				</div>
 			  );
 	}
