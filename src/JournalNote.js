@@ -1,4 +1,7 @@
 import React from 'react';
+import { connect } from 'react-redux';
+
+import { journalDelete } from './actions';
 
 class JournalNote extends React.Component {
 	constructor(props) {
@@ -8,13 +11,7 @@ class JournalNote extends React.Component {
 			
 		}
 		
-		this.onDescClick = this.onDescClick.bind(this);
 		this.onDeleteClick = this.onDeleteClick.bind(this);
-	}
-	
-	onDescClick(e) {
-		e.preventDefault();
-		
 	}
 	
 	onDeleteClick(e) {
@@ -25,28 +22,30 @@ class JournalNote extends React.Component {
 		}).then((res) => {
 			if (res.status === 200) {
 				console.log('Deleted');
-				this.props.onNoteDelete(this.props.note._id);
+				this.props.dispatch(journalDelete(this.props.note._id));
 			}
 			else {
 				console.log('Not Deleted');
 			}
-		}).then((data) => {
-			this.setState({
-				notes: data
-			});
 		});
 	}
 	
 	render() {
 		return (
-			<li>
-				<span onClick={this.onDescClick}><b>{this.props.note.name}</b> </span>
-				<span>{this.props.note.date}</span>
-				<button onClick={this.onDeleteClick}>Delete</button>
-				<span><p>{this.props.note.description}</p></span>
+			<li className="card card-body d-flex align-items-center justify-content-start">
+				<h5 className="note-title text-truncate mb-0" data-noteheading={this.props.note.name}>
+					{this.props.note.name}
+				</h5>
+				<p className="note-date font-12 text-muted mx-3">{this.props.note.date}</p>
+				<p className="note-inner-content text-muted" data-notecontent={this.props.note.description}>
+					{this.props.note.description}
+				</p>
+				<button className="btn btn-link p-0 ml-auto" onClick={this.onDeleteClick}>
+					<i className="fa fa-trash remove-note"></i>
+				</button>
 			</li>
 		)
 	}
 }
 
-export default JournalNote;
+export default connect()(JournalNote);

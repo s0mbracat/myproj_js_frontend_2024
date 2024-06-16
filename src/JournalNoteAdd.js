@@ -1,5 +1,8 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
+import { connect } from 'react-redux';
+
+import { journalAdd } from './actions';
 
 function getDateOnAdd() {
 
@@ -71,18 +74,29 @@ class JournalNoteAddInner extends React.Component {
 		}).then((res) => {
 			return res.json();
 		}).then((data) => {
-			this.props.onNoteAdd(data);
+			this.props.dispatch(journalAdd(data._id, data.name, data.description, data.date));
 			this.props.history('/');
 		});
 	}
 	
 	render() {
 		return (
+		<div className="page-content container note-has-grid">
+		<div className="page-content container note-has-grid">
+				<ul className="nav nav-pills p-3 bg-white mb-3 rounded-pill align-items-center">
+					<li className="nav-item">
+						<NavLink className="nav-link btn-primary rounded-pill d-flex align-items-center px-3" to='/'><i className="icon-note m-1"><span className="d-none d-md-block font-14">Back to list</span></i></NavLink>
+					</li>
+				</ul>
+		</div>
+		<div className="card card-body d-flex align-items-center justify-content-start">
 			<form onSubmit={this.onAddFormSubmit}>
-				<input type="text" value={this.state.name} onChange={this.onNameChange} placeholder="Name" />
-				<input type="text" value={this.state.description} onChange={this.onDescriptionChange} placeholder="Description" />
-				<input type="submit" value="Add" />
+				<div align="center"><input type="text" value={this.state.name} onChange={this.onNameChange} placeholder="Title" className="nameinputform grid" /></div>
+				<div align="center"><textarea value={this.state.description} onChange={this.onDescriptionChange} placeholder="Share your thoughts..." className="descinputform grid"></textarea></div>
+				<div align="center"><input type="submit" value="Add" /></div>
 			</form>
+		</div>
+		</div>
 		)
 	}
 }
@@ -93,4 +107,4 @@ const JournalNoteAdd = (props) => {
 	)
 }
 
-export default JournalNoteAdd;
+export default connect()(JournalNoteAdd);
